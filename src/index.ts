@@ -1,16 +1,18 @@
-import express from 'express'
+import express from "express";
+import http from "http";
+import "reflect-metadata";
 
-import config from './config'
-import loaders from './loaders'
-import { logger } from './utils/logger';
+import config from "./config";
+import loaders from "./loaders";
+import { logger } from "./utils/logger";
 
 async function startServer() {
-
   const app = express();
+  const httpServer = http.createServer(app);
 
-  await loaders({ expressApp: app })
+  await loaders({ expressApp: app, httpServer: httpServer });
 
-  app.listen(config.port, () => {
+  httpServer.listen(config.port, () => {
     logger.info(`Your server is ready on port ${config.port}!`);
   });
 }

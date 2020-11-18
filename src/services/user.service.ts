@@ -1,11 +1,15 @@
-import { getModelForClass } from "@typegoose/typegoose";
-import { ServiceBase } from "src/helpers/ServiceBase";
+import { getModelForClass, ReturnModelType } from "@typegoose/typegoose";
+import { ServiceBase } from "src/helpers/service.base";
 import { IUserService } from "src/interfaces/IUserService";
 import { User, UserDTO } from "src/models/user.model";
+import { Service, Inject } from "typedi";
 
-export default class UserService extends ServiceBase<User>  implements IUserService {
-  constructor() {
-    super(getModelForClass(User));
+@Service()
+export default class UserService
+  extends ServiceBase<User>
+  implements IUserService {
+  constructor(@Inject("userModel") model: ReturnModelType<typeof User>) {
+    super(model);
   }
 
   async createUser(user: UserDTO): Promise<User> {
@@ -16,6 +20,14 @@ export default class UserService extends ServiceBase<User>  implements IUserServ
   }
 
   async getUser(id: string): Promise<User> {
-    return this.model.findById(id)
+    return this.model.findById(id);
+  }
+
+  async getUserByEmail(email: string): Promise<User> {
+    return this.model.findOne({ email: email }).exec();
+  }
+
+  async getUsers(): Promise<User[]> {
+    return this.model.find().exec();
   }
 }

@@ -1,8 +1,12 @@
-import { prop as Prop, pre, modelOptions as ModelOptions } from '@typegoose/typegoose';
-import * as bcrypt from 'bcrypt';
+import {
+  prop as Prop,
+  pre,
+  modelOptions as ModelOptions,
+} from "@typegoose/typegoose";
+import * as bcrypt from "bcrypt";
 
-@pre<User>('save', function(next) {
-  if (!this.isModified('password')) return next();
+@pre<User>("save", function (next) {
+  if (!this.isModified("password")) return next();
 
   bcrypt.genSalt(10, (err, salt) => {
     if (err) return next(err);
@@ -20,7 +24,13 @@ export class User {
   @Prop({ required: true, trim: true })
   name: string;
 
-  @Prop({ required: true, unique: true, lowercase: true, trim: true, index: true })
+  @Prop({
+    required: true,
+    unique: true,
+    lowercase: true,
+    trim: true,
+    index: true,
+  })
   email: string;
 
   @Prop({ required: true })
