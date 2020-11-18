@@ -50,6 +50,7 @@
     "reflect-metadata": "^0.1.13",
     "socket-controllers": "0.0.5",
     "socket.io": "^3.0.2",
+    "socketio-jwt": "^4.6.2",
     "typedi": "^0.8.0",
     "winston": "^3.3.3"
   }
