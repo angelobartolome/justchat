@@ -1,6 +1,6 @@
+import "reflect-metadata";
 import express from "express";
 import http from "http";
-import "reflect-metadata";
 
 import config from "./config";
 import loaders from "./loaders";

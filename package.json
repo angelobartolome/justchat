@@ -48,6 +48,7 @@
     "mongoose": "^5.10.15",
     "morgan": "^1.10.0",
     "reflect-metadata": "^0.1.13",
+    "socket-controllers": "0.0.5",
     "socket.io": "^3.0.2",
     "typedi": "^0.8.0",
     "winston": "^3.3.3"
