@@ -1,11 +1,5 @@
-import {
-  SocketController,
-  ConnectedSocket,
-  MessageBody,
-  OnMessage,
-  SocketIO,
-} from "socket-controllers";
-import { Server, Socket } from "socket.io";
+import { SocketController, MessageBody, OnMessage } from "socket-controllers";
+import { Server } from "socket.io";
 import {
   ChatBotProtocol,
   ChatIncomingMessage,
@@ -15,8 +9,6 @@ import {
 } from "src/enums/chat.protocol";
 import Container, { Inject } from "typedi";
 import amqplib from "amqplib";
-import config from "src/config";
-import expressLoader from "src/loaders/express.loader";
 
 @SocketController()
 export class BotController {
@@ -40,6 +32,8 @@ export class BotController {
     const { message, room } = incomingMessage;
 
     // starts with /, it's a bot command
+    // could be improved using regex, but for
+    // this application, it's totally fine.
     if (message.startsWith("/")) {
       this.channel.sendToQueue(
         ChatBotProtocol.BOT_REQUEST_QUEUE_ID,
@@ -64,7 +58,6 @@ export class BotController {
       message: message.content.toString(),
     };
 
-    // TODO: get channel from bot
     io.to(room).emit(ChatOutputProtocol.SEND_MESSAGE, output);
   }
 }
