@@ -6,7 +6,6 @@ import {
   SocketIO,
 } from "socket-controllers";
 import { Server } from "socket.io";
-import roomConfig from "src/config/room.config";
 import { ChatInputProtocol, ChatOutputProtocol } from "src/enums/chat.protocol";
 import RoomService from "src/services/room.service";
 import UserService from "src/services/user.service";

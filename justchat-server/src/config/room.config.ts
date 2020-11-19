@@ -1,5 +1,4 @@
 export default {
   recentMessageCount: 50,
+  defaultRooms: ["#default", "#gaming"],
 };
-
-export const defaultRooms = ["#default", "#gaming"];

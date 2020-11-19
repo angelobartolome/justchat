@@ -1,4 +1,4 @@
-import { getModelForClass, ReturnModelType } from "@typegoose/typegoose";
+import { ReturnModelType } from "@typegoose/typegoose";
 import { ServiceBase } from "src/helpers/service.base";
 import { IUserService } from "src/interfaces/user.service";
 import { User, UserDTO } from "src/models/user.model";

@@ -1,8 +1,6 @@
 import { logger } from "src/utils/logger";
 import config from "src/config";
 import amqp from "amqplib";
-import { Container } from "typedi";
-import { BotController } from "src/controllers/bot.controller";
 import { ChatBotProtocol } from "src/enums/chat.protocol";
 export default async () => {
   const conn = await amqp.connect(config.brokerUri);

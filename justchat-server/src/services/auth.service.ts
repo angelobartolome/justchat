@@ -1,3 +1,4 @@
+import { AppError } from "src/common/app.error";
 import { compare } from "src/helpers/compare.password";
 import { IAuthService } from "src/interfaces/auth.service";
 import { Service } from "typedi";
@@ -14,6 +15,6 @@ export default class AuthService implements IAuthService {
       return await compare(password, user.password);
     }
 
-    throw new Error("User not found");
+    throw new AppError("User not found");
   }
 }

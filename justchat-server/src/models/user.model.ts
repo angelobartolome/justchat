@@ -1,8 +1,4 @@
-import {
-  prop as Prop,
-  pre,
-  modelOptions as ModelOptions,
-} from "@typegoose/typegoose";
+import { prop as Prop, pre } from "@typegoose/typegoose";
 import * as bcrypt from "bcrypt";
 
 @pre<User>("save", function (next) {

@@ -3,7 +3,7 @@ import { TimeStamps } from "@typegoose/typegoose/lib/defaultClasses";
 import { User } from "./user.model";
 
 export class RoomMessage extends TimeStamps {
-  @Prop({ ref: "User", index: true, autopopulate: { maxDepth: 1 } })
+  @Prop({ ref: "User", index: true })
   user: Ref<User>;
 
   @Prop()
