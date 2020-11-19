@@ -7,12 +7,9 @@ import {
 } from "socket-controllers";
 import { Socket } from "socket.io";
 import config from "src/config";
-import roomConfig from "src/config/room.config";
 import { ChatInputProtocol, ChatOutputProtocol } from "src/enums/chat.protocol";
-import { ChatMessageDataMapper } from "src/mappers/chat.message.mapper";
 import RoomService from "src/services/room.service";
 import { AuthenticatedSocket } from "src/types/authenticated.socket";
-import { ChatMessage } from "src/types/chat.types";
 
 @SocketController()
 export class ChannelController {
@@ -36,19 +33,6 @@ export class ChannelController {
     @ConnectedSocket() socket: Socket,
     @MessageBody() message: any
   ) {
-    const room = await this.roomService.getRoomByName(message.room);
-
-    // Althought data already comes sorted from MongoDB structure
-    // we make sure.
-    const roomMessages = room.messages.sort(
-      (a, b) => a.createdAt?.getTime() - b.createdAt?.getTime()
-    );
-
-    // Convert RoomMessages to ChatMessage
-    const chatMessages: ChatMessage[] = roomMessages
-      .slice(-roomConfig.recentMessageCount)
-      .map((c) => new ChatMessageDataMapper().fromDomain(c));
-
     const channel = message.room;
 
     // Leave from previous rooms
@@ -56,9 +40,11 @@ export class ChannelController {
 
     socket.join(channel);
 
+    const messages = await this.roomService.getRecentMessages(message.room);
+
     socket.emit(ChatOutputProtocol.JOIN_CHANNEL, {
       channel,
-      messages: chatMessages,
+      messages,
     });
   }
 

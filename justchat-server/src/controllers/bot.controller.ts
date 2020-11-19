@@ -6,8 +6,7 @@ import {
 } from "socket-controllers";
 import { Server } from "socket.io";
 import { ChatInputProtocol, ChatOutputProtocol } from "src/enums/chat.protocol";
-import Container, { Inject } from "typedi";
-import amqplib from "amqplib";
+import Container from "typedi";
 import { AuthenticatedSocket } from "src/types/authenticated.socket";
 import UserService from "src/services/user.service";
 import { ChatIncomingMessage, ChatMessage } from "src/types/chat.types";
@@ -16,7 +15,6 @@ import MessageBrokerService from "src/services/message.broker.service";
 @SocketController()
 export class BotController {
   constructor(
-    @Inject("channel") private readonly channel: amqplib.Channel,
     private readonly mbService: MessageBrokerService,
     private readonly userService: UserService
   ) {}
@@ -28,6 +26,8 @@ export class BotController {
 
   async handleMessage(message: ChatMessage) {
     // We directly forward messages coming from bot
+    // need to get through Container.get as @Inject on
+    // Socket.io is not available in this scope.
     const io = Container.get<Server>(Server);
     io.to(message.room).emit(ChatOutputProtocol.SEND_MESSAGE, message);
   }
@@ -39,7 +39,7 @@ export class BotController {
     @ConnectedSocket() socket: AuthenticatedSocket,
     @MessageBody() incomingMessage: ChatIncomingMessage
   ) {
-    const { message, room } = incomingMessage;
+    const { message } = incomingMessage;
     const user = await this.userService.getUser(socket.decoded_token.id);
 
     // starts with /, it's a bot command
@@ -47,10 +47,9 @@ export class BotController {
     // this application, it's totally fine.
     if (message.startsWith("/")) {
       this.mbService.sendMessage({
+        ...incomingMessage,
         date: new Date(),
         from: user.name,
-        message,
-        room,
       });
     }
   }
