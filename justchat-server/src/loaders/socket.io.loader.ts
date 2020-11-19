@@ -29,8 +29,8 @@ export default async (http: http.Server) => {
   Container.set(Server, io);
 
   // Setup BotController as now we have io instance
-  // const botController = Container.get<BotController>(BotController);
-  // botController.setupConsumer();
+  const botController = Container.get<BotController>(BotController);
+  botController.setupConsumer();
 
   logger.info("Socket.io Initialized");
 };

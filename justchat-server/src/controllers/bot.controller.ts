@@ -13,11 +13,10 @@ import {
   ChatMessage,
   ChatOutputProtocol,
 } from "src/enums/chat.protocol";
-import UserService from "src/services/user.service";
-import { AuthenticatedSocket } from "src/types/authenticated.socket";
 import Container, { Inject } from "typedi";
 import amqplib from "amqplib";
 import config from "src/config";
+import expressLoader from "src/loaders/express.loader";
 
 @SocketController()
 export class BotController {
@@ -25,9 +24,15 @@ export class BotController {
 
   setupConsumer() {
     // We handle here messages that bot wants to send to people
-    this.channel.consume(ChatBotProtocol.BOT_RESPONSE_QUEUE_ID, (message) => {
-      this.handleMessage(message);
-    });
+    this.channel.consume(
+      ChatBotProtocol.BOT_RESPONSE_QUEUE_ID,
+      (message) => {
+        this.handleMessage(message);
+      },
+      {
+        noAck: false,
+      }
+    );
   }
 
   @OnMessage(ChatInputProtocol.SEND_MESSAGE)
@@ -36,19 +41,30 @@ export class BotController {
 
     // starts with /, it's a bot command
     if (message.startsWith("/")) {
-      this.channel.sendToQueue("bots", Buffer.from(message));
+      this.channel.sendToQueue(
+        ChatBotProtocol.BOT_REQUEST_QUEUE_ID,
+        Buffer.from(message),
+        {
+          headers: {
+            channel: room,
+          },
+        }
+      );
     }
   }
 
   async handleMessage(message: amqplib.ConsumeMessage) {
     const io = Container.get<Server>(Server);
 
+    const room = message.properties.headers["channel"];
+    const name = message.properties.headers["name"];
+
     const output: ChatMessage = {
-      from: "bot",
+      from: name,
       message: message.content.toString(),
     };
 
     // TODO: get channel from bot
-    io.to(config.defaultChannel).emit(ChatOutputProtocol.SEND_MESSAGE, output);
+    io.to(room).emit(ChatOutputProtocol.SEND_MESSAGE, output);
   }
 }
