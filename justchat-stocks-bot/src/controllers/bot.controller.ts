@@ -17,7 +17,6 @@ export class BotController {
 
   async parseMessage(message: ChatBotMessage) {
     const { room, text } = message;
-    console.log("parsing", message);
 
     // Invalid command
     if (!StockCommand.test(text)) {
