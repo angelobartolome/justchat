@@ -4,6 +4,7 @@ export type ChatIncomingMessage = {
 };
 
 export type ChatMessage = {
+  date: Date;
   from: string;
   message: string;
 };

@@ -8,6 +8,7 @@ export enum ChatInputProtocol {
 export enum ChatOutputProtocol {
   JOIN_CHANNEL = "user_joined_channel",
   SEND_MESSAGE = "user_sent_message",
+  AVAILABLE_CHANNELS = "update_available_channels",
 }
 
 export enum ChatBotProtocol {

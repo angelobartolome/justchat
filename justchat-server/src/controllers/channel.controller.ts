@@ -5,27 +5,55 @@ import {
   MessageBody,
   OnMessage,
 } from "socket-controllers";
-import { Server, Socket } from "socket.io";
+import { Socket } from "socket.io";
 import config from "src/config";
+import roomConfig from "src/config/room.config";
 import { ChatInputProtocol, ChatOutputProtocol } from "src/enums/chat.protocol";
+import { ChatMessageDataMapper } from "src/mappers/chat.message.mapper";
+import RoomService from "src/services/room.service";
 import { AuthenticatedSocket } from "src/types/authenticated.socket";
+import { ChatMessage } from "src/types/chat.types";
 
 @SocketController()
 export class ChannelController {
+  constructor(private roomService: RoomService) {}
+
   @OnConnect()
-  connection(@ConnectedSocket() socket: AuthenticatedSocket) {
-    // TODO: Send user the list of channels
+  async connection(@ConnectedSocket() socket: AuthenticatedSocket) {
+    const roomList = await this.roomService.getRooms();
+    const roomNames = roomList.map(({ name }) => name);
+    socket.emit(ChatOutputProtocol.AVAILABLE_CHANNELS, roomNames);
 
     // joins user to default channel
-    socket.join(config.defaultChannel);
-    socket.emit(ChatOutputProtocol.JOIN_CHANNEL, config.defaultChannel);
+    await this.joinChannel(socket, {
+      room: config.defaultChannel,
+    });
   }
 
   // message when user wants to join channel
   @OnMessage(ChatInputProtocol.JOIN_CHANNEL)
-  joinChannel(@ConnectedSocket() socket: Socket, @MessageBody() message: any) {
+  async joinChannel(
+    @ConnectedSocket() socket: Socket,
+    @MessageBody() message: any
+  ) {
+    const room = await this.roomService.getRoomByName(message.room);
+    // Althought data already comes sorted from MongoDB structure
+    // we make sure.
+    const roomMessages = room.messages.sort(
+      (a, b) => a.createdAt?.getTime() - b.createdAt?.getTime()
+    );
+
+    // Convert RoomMessages to ChatMessage
+    const chatMessages: ChatMessage[] = roomMessages
+      .slice(-roomConfig.recentMessageCount)
+      .map((c) => new ChatMessageDataMapper().fromDomain(c));
+
     const channel = message.room;
     socket.join(channel);
-    socket.emit(ChatOutputProtocol.JOIN_CHANNEL, channel);
+
+    socket.emit(ChatOutputProtocol.JOIN_CHANNEL, {
+      channel,
+      messages: chatMessages,
+    });
   }
 }

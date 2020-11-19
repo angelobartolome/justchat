@@ -63,6 +63,7 @@ export class BotController {
     const name = message.properties.headers["name"];
 
     const output: ChatMessage = {
+      date: new Date(),
       from: name,
       message: message.content.toString(),
     };
