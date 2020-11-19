@@ -6,4 +6,5 @@ export default {
   databaseURI: process.env.DATABASE_URI,
   secret: process.env.SECRET,
   defaultChannel: "#default",
+  brokerUri: process.env.BROKER_URI,
 };

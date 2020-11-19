@@ -14,11 +14,10 @@ import {
 } from "src/enums/chat.protocol";
 import UserService from "src/services/user.service";
 import { AuthenticatedSocket } from "src/types/authenticated.socket";
-import { Inject } from "typedi";
 
 @SocketController()
 export class ChatController {
-  constructor(@Inject() private userService: UserService) {}
+  constructor(private userService: UserService) {}
 
   @OnMessage(ChatInputProtocol.SEND_MESSAGE)
   async sendMessage(
@@ -29,7 +28,6 @@ export class ChatController {
     // fetch user, so we don't rely on JWT's user information
     // for additional safety reasons.
     const user = await this.userService.getUser(socket.decoded_token.id);
-
     const { message, room } = incomingMessage;
 
     const output: ChatMessage = {

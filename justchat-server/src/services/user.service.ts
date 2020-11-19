@@ -20,7 +20,7 @@ export default class UserService
   }
 
   async getUser(id: string): Promise<User> {
-    return this.model.findById(id);
+    return this.model.findById(id).exec();
   }
 
   async getUserByEmail(email: string): Promise<User> {
