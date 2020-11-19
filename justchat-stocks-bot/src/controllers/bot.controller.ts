@@ -16,17 +16,25 @@ export class BotController {
   }
 
   async parseMessage(message: ChatBotMessage) {
+    const { channel, text } = message;
+
     // Invalid command
-    if (!StockCommand.test(message.text)) return;
+    if (!StockCommand.test(text)) {
+      await this.chatService.sendMessage(
+        "Sorry, invalid command, try for example: /stock=googl.us",
+        channel
+      );
+      return;
+    }
 
     // Get first match of regex
-    const [ticker] = new RegExp(/(?<=\/stock=)(\w|\.)*/).exec(message.text);
+    const [ticker] = new RegExp(/(?<=\/stock=)(\w|\.)*/).exec(text);
 
     const data = await this.stockService.getData(ticker);
     if (!data) throw new Error("Unable to find data related to " + ticker);
 
     const reply = `${ticker.toUpperCase()} quote is $${data} per share`;
 
-    await this.chatService.sendMessage(reply, message.channel);
+    await this.chatService.sendMessage(reply, channel);
   }
 }
