@@ -18,6 +18,7 @@ export default class StockService implements IStockService {
       });
 
       const quote = Number.parseFloat(Close);
+
       return quote;
     } catch (error) {
       logger.error("Error while fetching data: " + error.message);

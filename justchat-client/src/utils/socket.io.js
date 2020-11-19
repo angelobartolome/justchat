@@ -29,10 +29,21 @@ export const joinChannel = (channel) => {
     room: channel,
   });
 };
+
 export const subscribeToChannel = (cb) => {
   if (!socket) return true;
 
   socket.on("user_joined_channel", (data) => {
+    console.log(data);
+    return cb(null, data);
+  });
+};
+
+export const subscribeToChannelList = (cb) => {
+  if (!socket) return true;
+
+  socket.on("update_available_channels", (data) => {
+    console.log(data);
     return cb(null, data);
   });
 };

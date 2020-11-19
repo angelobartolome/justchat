@@ -14,10 +14,11 @@ import {
   subscribeToChannel,
   sendMessage,
   joinChannel,
+  subscribeToChannelList,
 } from "./utils/socket.io";
 
 const App = () => {
-  const [channelList] = useState(["#default", "#gaming"]);
+  const [channelList, setList] = useState([]);
   const [channel, setChannel] = useState();
   const [messages, setMessages] = useState([]);
   const [token, setToken] = useState("");
@@ -32,9 +33,14 @@ const App = () => {
       setMessages((oldChats) => [...oldChats, data]);
     });
 
-    subscribeToChannel((err, data) => {
-      setChannel(data);
-      setMessages([]);
+    subscribeToChannel((err, { channel, messages }) => {
+      setChannel(channel);
+      if (messages) setMessages([...messages]);
+      else setMessages([]);
+    });
+
+    subscribeToChannelList((err, channels) => {
+      setList(channels);
     });
     return () => {
       disconnectSocket();

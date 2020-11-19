@@ -24,6 +24,7 @@ export class BotController {
 
     const data = await this.stockService.getData(ticker);
     if (!data) throw new Error("Unable to find data related to " + ticker);
+
     const reply = `${ticker.toUpperCase()} quote is $${data} per share`;
 
     await this.chatService.sendMessage(reply, message.channel);

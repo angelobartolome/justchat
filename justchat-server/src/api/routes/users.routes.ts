@@ -1,6 +1,10 @@
 import { Router } from "express";
 import UserService from "src/services/user.service";
+import { UserToken } from "src/types/user.token";
 import Container from "typedi";
+
+import jwt from "jsonwebtoken";
+import config from "src/config";
 
 const router = Router();
 export default (app: Router) => {
@@ -20,7 +24,14 @@ export default (app: Router) => {
         name,
         password,
       });
-      return res.json({ user }).status(200);
+
+      const userToken: UserToken = {
+        id: user.id,
+        name,
+      };
+
+      const token = jwt.sign(userToken, config.secret);
+      return res.json({ user, token }).status(200);
     } catch (e) {
       return next(e);
     }

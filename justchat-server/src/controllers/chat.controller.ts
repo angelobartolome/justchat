@@ -36,7 +36,10 @@ export class ChatController {
       message: message,
     };
 
-    await this.roomService.saveMessage(user, room, message);
+    // There's room for improvement here
+    if (!message.startsWith("/"))
+      await this.roomService.saveMessage(user, room, message);
+
     // Here we left some room for improvement, such as
     // word filtering for e.g.
 

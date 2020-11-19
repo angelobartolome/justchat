@@ -26,10 +26,10 @@ function SignIn({ onAuthenticated }) {
   const classes = useStyles();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [isSigningIn, setIsSigningIn] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   function doSignIn() {
-    setIsSigningIn(true);
+    setIsLoading(true);
     var headers = new Headers();
     headers.append("Content-Type", "application/json");
     var requestOptions = {
@@ -46,11 +46,11 @@ function SignIn({ onAuthenticated }) {
           onAuthenticated(c.token);
         }
 
-        setIsSigningIn(false);
+        setIsLoading(false);
       })
       .catch(() => {
         alert("Error, please check your credentials");
-        setIsSigningIn(false);
+        setIsLoading(false);
       });
   }
 
@@ -95,9 +95,105 @@ function SignIn({ onAuthenticated }) {
           variant="contained"
           color="secondary"
           className={classes.submit}
-          disabled={isSigningIn}
+          disabled={isLoading}
         >
           Sign In
+        </Button>
+      </form>
+    </div>
+  );
+}
+
+function SignUp({ onAuthenticated }) {
+  const classes = useStyles();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [name, setName] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+
+  function doSignUp() {
+    setIsLoading(true);
+    var headers = new Headers();
+    headers.append("Content-Type", "application/json");
+    var requestOptions = {
+      method: "POST",
+      headers: headers,
+      body: JSON.stringify({ name, email, password }),
+      redirect: "follow",
+    };
+
+    fetch("http://localhost:3000/users", requestOptions)
+      .then((c) => c.json())
+      .then((c) => {
+        if (c.token) {
+          onAuthenticated(c.token);
+        }
+
+        setIsLoading(false);
+      })
+      .catch(() => {
+        alert("Error, please check your credentials");
+        setIsLoading(false);
+      });
+  }
+
+  return (
+    <div className={classes.paper}>
+      <Typography component="h1" variant="h5">
+        Sign up
+      </Typography>
+      <form className={classes.form} noValidate>
+        <Grid container spacing={2}>
+          <Grid item xs={12}>
+            <TextField
+              name="name"
+              variant="outlined"
+              required
+              fullWidth
+              id="name"
+              label="Your name"
+              value={name}
+              onChange={(event) => setName(event.target.value)}
+              autoFocus
+            />
+          </Grid>
+          <Grid item xs={12}>
+            <TextField
+              variant="outlined"
+              required
+              fullWidth
+              id="email"
+              label="Email Address"
+              name="email"
+              autoComplete="email"
+              value={email}
+              onChange={(event) => setEmail(event.target.value)}
+            />
+          </Grid>
+          <Grid item xs={12}>
+            <TextField
+              variant="outlined"
+              required
+              fullWidth
+              name="password"
+              label="Password"
+              type="password"
+              value={password}
+              onChange={(event) => setPassword(event.target.value)}
+              id="password"
+              autoComplete="current-password"
+            />
+          </Grid>
+        </Grid>
+        <Button
+          onClick={doSignUp}
+          fullWidth
+          variant="contained"
+          color="secondary"
+          className={classes.submit}
+          disabled={isLoading}
+        >
+          Sign Up
         </Button>
       </form>
     </div>
@@ -119,59 +215,12 @@ export function AuthDialog({ onAuthenticated, token }) {
       <DialogContent>
         <Grid container spacing={3} xl>
           <Grid item xs={6}>
-            <div className={classes.paper}>
-              <Typography component="h1" variant="h5">
-                Sign up
-              </Typography>
-              <form className={classes.form} noValidate>
-                <Grid container spacing={2}>
-                  <Grid item xs={12}>
-                    <TextField
-                      name="name"
-                      variant="outlined"
-                      required
-                      fullWidth
-                      id="name"
-                      label="Your name"
-                      autoFocus
-                    />
-                  </Grid>
-                  <Grid item xs={12}>
-                    <TextField
-                      variant="outlined"
-                      required
-                      fullWidth
-                      id="email"
-                      label="Email Address"
-                      name="email"
-                      autoComplete="email"
-                    />
-                  </Grid>
-                  <Grid item xs={12}>
-                    <TextField
-                      variant="outlined"
-                      required
-                      fullWidth
-                      name="password"
-                      label="Password"
-                      type="password"
-                      id="password"
-                      autoComplete="current-password"
-                    />
-                  </Grid>
-                </Grid>
-                <Button
-                  type="submit"
-                  fullWidth
-                  variant="contained"
-                  color="primary"
-                  className={classes.submit}
-                  disabled={isSigningUp}
-                >
-                  Sign Up
-                </Button>
-              </form>
-            </div>
+            <SignUp
+              onAuthenticated={(token) => {
+                setIsAuthenticated(true);
+                onAuthenticated(token);
+              }}
+            />
           </Grid>
           <Grid item xs={6}>
             <SignIn
