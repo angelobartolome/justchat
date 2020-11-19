@@ -4,6 +4,7 @@ export type ChatIncomingMessage = {
 };
 
 export type ChatMessage = {
+  room: string;
   date: Date;
   from: string;
   message: string;

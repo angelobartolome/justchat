@@ -37,6 +37,7 @@ export class ChannelController {
     @MessageBody() message: any
   ) {
     const room = await this.roomService.getRoomByName(message.room);
+
     // Althought data already comes sorted from MongoDB structure
     // we make sure.
     const roomMessages = room.messages.sort(
@@ -49,11 +50,24 @@ export class ChannelController {
       .map((c) => new ChatMessageDataMapper().fromDomain(c));
 
     const channel = message.room;
+
+    // Leave from previous rooms
+    this.leaveFromRooms(socket);
+
     socket.join(channel);
 
     socket.emit(ChatOutputProtocol.JOIN_CHANNEL, {
       channel,
       messages: chatMessages,
+    });
+  }
+
+  leaveFromRooms(socket: Socket) {
+    const { rooms, id } = socket;
+    rooms.forEach((room) => {
+      if (room !== id) {
+        socket.leave(room);
+      }
     });
   }
 }

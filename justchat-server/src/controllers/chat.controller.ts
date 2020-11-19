@@ -6,6 +6,7 @@ import {
   SocketIO,
 } from "socket-controllers";
 import { Server } from "socket.io";
+import roomConfig from "src/config/room.config";
 import { ChatInputProtocol, ChatOutputProtocol } from "src/enums/chat.protocol";
 import RoomService from "src/services/room.service";
 import UserService from "src/services/user.service";
@@ -31,9 +32,9 @@ export class ChatController {
     const { message, room } = incomingMessage;
 
     const output: ChatMessage = {
+      ...incomingMessage,
       date: new Date(),
       from: user.name,
-      message: message,
     };
 
     // There's room for improvement here

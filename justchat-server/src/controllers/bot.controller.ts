@@ -5,32 +5,35 @@ import {
   ConnectedSocket,
 } from "socket-controllers";
 import { Server } from "socket.io";
-import {
-  ChatBotProtocol,
-  ChatInputProtocol,
-  ChatOutputProtocol,
-} from "src/enums/chat.protocol";
+import { ChatInputProtocol, ChatOutputProtocol } from "src/enums/chat.protocol";
 import Container, { Inject } from "typedi";
 import amqplib from "amqplib";
 import { AuthenticatedSocket } from "src/types/authenticated.socket";
 import UserService from "src/services/user.service";
 import { ChatIncomingMessage, ChatMessage } from "src/types/chat.types";
+import MessageBrokerService from "src/services/message.broker.service";
 
 @SocketController()
 export class BotController {
   constructor(
     @Inject("channel") private readonly channel: amqplib.Channel,
+    private readonly mbService: MessageBrokerService,
     private readonly userService: UserService
   ) {}
 
   setupConsumer() {
     // We handle here messages that bot wants to send to people
-    this.channel.consume(ChatBotProtocol.BOT_RESPONSE_QUEUE_ID, (message) => {
-      this.channel.ack(message);
-      this.handleMessage(message);
-    });
+    this.mbService.listenToMessages((msg) => this.handleMessage(msg));
   }
 
+  async handleMessage(message: ChatMessage) {
+    // We directly forward messages coming from bot
+    const io = Container.get<Server>(Server);
+    io.to(message.room).emit(ChatOutputProtocol.SEND_MESSAGE, message);
+  }
+
+  // Here we intercept messages that contains
+  // our magic character /
   @OnMessage(ChatInputProtocol.SEND_MESSAGE)
   async sendMessage(
     @ConnectedSocket() socket: AuthenticatedSocket,
@@ -43,31 +46,12 @@ export class BotController {
     // could be improved using regex, but for
     // this application, it's totally fine.
     if (message.startsWith("/")) {
-      this.channel.sendToQueue(
-        ChatBotProtocol.BOT_REQUEST_QUEUE_ID,
-        Buffer.from(message),
-        {
-          headers: {
-            channel: room,
-            answerTo: user.name,
-          },
-        }
-      );
+      this.mbService.sendMessage({
+        date: new Date(),
+        from: user.name,
+        message,
+        room,
+      });
     }
-  }
-
-  async handleMessage(message: amqplib.ConsumeMessage) {
-    const io = Container.get<Server>(Server);
-
-    const room = message.properties.headers["channel"];
-    const name = message.properties.headers["name"];
-
-    const output: ChatMessage = {
-      date: new Date(),
-      from: name,
-      message: message.content.toString(),
-    };
-
-    io.to(room).emit(ChatOutputProtocol.SEND_MESSAGE, output);
   }
 }

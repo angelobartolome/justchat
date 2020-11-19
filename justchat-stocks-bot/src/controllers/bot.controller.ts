@@ -16,13 +16,14 @@ export class BotController {
   }
 
   async parseMessage(message: ChatBotMessage) {
-    const { channel, text } = message;
+    const { room, text } = message;
+    console.log("parsing", message);
 
     // Invalid command
     if (!StockCommand.test(text)) {
       await this.chatService.sendMessage(
         "Sorry, invalid command, try for example: /stock=googl.us",
-        channel
+        room
       );
       return;
     }
@@ -35,6 +36,6 @@ export class BotController {
 
     const reply = `${ticker.toUpperCase()} quote is $${data} per share`;
 
-    await this.chatService.sendMessage(reply, channel);
+    await this.chatService.sendMessage(reply, room);
   }
 }

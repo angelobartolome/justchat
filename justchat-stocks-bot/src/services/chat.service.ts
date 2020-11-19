@@ -14,7 +14,7 @@ export default class ChatService implements IChatService {
       ChatBotProtocol.BOT_REQUEST_QUEUE_ID,
       async (message) => {
         this.channel.ack(message);
-        let channel = "#default";
+        let room = "#default";
 
         try {
           const {
@@ -22,34 +22,36 @@ export default class ChatService implements IChatService {
             properties: { headers },
           } = message;
 
-          channel = channel || headers["channel"];
+          room = headers["room"] || room;
 
           await callback({
             text: String(content),
-            channel: channel,
+            room: room,
             from: headers["name"],
           });
         } catch (error) {
           logger.error(error);
           await this.sendMessage(
             "Sorry, i can't to complete your request 🤭",
-            channel
+            room
           );
         }
       }
     );
   }
 
-  async sendMessage(text: string, channel: string): Promise<void> {
+  async sendMessage(text: string, room: string): Promise<void> {
+    const params = {
+      headers: {
+        name: config.botName,
+        room: room,
+      },
+    };
+
     this.channel.sendToQueue(
       ChatBotProtocol.BOT_RESPONSE_QUEUE_ID,
       Buffer.from(text),
-      {
-        headers: {
-          name: config.botName,
-          channel: channel,
-        },
-      }
+      params
     );
   }
 }

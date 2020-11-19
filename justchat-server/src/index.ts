@@ -10,7 +10,7 @@ async function startServer() {
   const app = express();
   const httpServer = http.createServer(app);
 
-  await loaders({ expressApp: app, httpServer: httpServer });
+  await loaders({ expressApp: app, httpServer });
 
   httpServer.listen(config.port, () => {
     logger.info(`Your server is ready on port ${config.port}!`);

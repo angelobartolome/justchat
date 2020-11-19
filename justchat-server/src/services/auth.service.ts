@@ -1,8 +1,5 @@
-import { getModelForClass, ReturnModelType } from "@typegoose/typegoose";
 import { compare } from "src/helpers/compare.password";
-import { ServiceBase } from "src/helpers/service.base";
-import { IAuthService } from "src/interfaces/IAuthService";
-import { IUserService } from "src/interfaces/IUserService";
+import { IAuthService } from "src/interfaces/auth.service";
 import { Service } from "typedi";
 import UserService from "./user.service";
 

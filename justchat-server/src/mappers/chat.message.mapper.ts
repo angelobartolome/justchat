@@ -1,4 +1,4 @@
-import { DataMapper } from "src/helpers/data.mapper.base";
+import { DataMapper } from "src/helpers/data.mapper";
 import { RoomMessage } from "src/models/room.model";
 import { User } from "src/models/user.model";
 import { ChatMessage } from "src/types/chat.types";
@@ -13,6 +13,7 @@ export class ChatMessageDataMapper
       date: createdAt,
       message: message,
       from: name,
+      room: "#default",
     };
   }
   toDomain(entity: ChatMessage): RoomMessage {

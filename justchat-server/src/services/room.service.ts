@@ -1,6 +1,6 @@
 import { DocumentType, ReturnModelType } from "@typegoose/typegoose";
 import { ServiceBase } from "src/helpers/service.base";
-import { IRoomService } from "src/interfaces/IRoomService";
+import { IRoomService } from "src/interfaces/room.service";
 import { Room } from "src/models/room.model";
 import { User } from "src/models/user.model";
 import { Service, Inject } from "typedi";
