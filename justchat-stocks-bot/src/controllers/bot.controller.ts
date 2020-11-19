@@ -2,10 +2,14 @@ import { ChatBotProtocol, StockCommand } from "src/enums/chat.protocol";
 import { Inject, Service } from "typedi";
 import amqplib, { ConsumeMessage } from "amqplib";
 import pkg from "../../package.json";
+import StockService from "src/services/stock.service";
 
 @Service()
 export class BotController {
-  constructor(@Inject("channel") private readonly channel: amqplib.Channel) {}
+  constructor(
+    @Inject("channel") private readonly channel: amqplib.Channel,
+    private readonly stockService: StockService
+  ) {}
 
   async init() {
     this.channel.consume(ChatBotProtocol.BOT_REQUEST_QUEUE_ID, (message) => {
@@ -25,9 +29,11 @@ export class BotController {
     // Get first match of regex
     const [ticker] = new RegExp(/(?<=\/stock=)(\w|\.)*/).exec(text);
 
+    const data = await this.stockService.getData(ticker);
+    const reply = `${ticker.toUpperCase()} quote is $${data} per share`;
     this.channel.sendToQueue(
       ChatBotProtocol.BOT_RESPONSE_QUEUE_ID,
-      Buffer.from("Command accepted: " + ticker),
+      Buffer.from(reply),
       {
         headers: {
           name: pkg.name,
