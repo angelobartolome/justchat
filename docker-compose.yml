@@ -1,0 +1,72 @@
+version: "2.1"
+
+services:
+  client:
+    build: ./justchat-client
+    ports:
+      - "80:80"
+    container_name: justchat-client
+
+  server:
+    build: ./justchat-server
+    ports:
+      - 3000:3000
+    container_name: justchat-server
+    restart: on-failure
+    environment:
+      - BROKER_URI=amqp://rabbitmq:5672
+      - DATABASE_URI=mongodb://db:27017/db
+    networks:
+      - app-network
+    command: ./wait-for.sh rabbitmq:5672 -- npm start
+    depends_on:
+      - db
+      - rabbitmq
+    links:
+      - rabbitmq
+
+  bot:
+    build: ./justchat-stocks-bot
+    container_name: justchat-stocks-bot
+    restart: on-failure
+    environment:
+      - BROKER_URI=amqp://rabbitmq:5672
+    networks:
+      - app-network
+    command: ./wait-for.sh rabbitmq:5672 -- npm start
+    depends_on:
+      - rabbitmq
+    links:
+      - rabbitmq
+
+  rabbitmq:
+    image: rabbitmq:3-management-alpine
+    container_name: rabbitmq
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    networks:
+      - app-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:15672"]
+      interval: 30s
+      timeout: 20s
+      retries: 3
+
+  db:
+    image: mongo
+    container_name: db
+    restart: unless-stopped
+    volumes:
+      - mongo-data:/data
+    ports:
+      - "27017:27017"
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
+
+volumes:
+  mongo-data:
