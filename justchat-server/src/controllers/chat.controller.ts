@@ -1,48 +1,45 @@
 import {
-  OnConnect,
   SocketController,
   ConnectedSocket,
-  OnDisconnect,
   MessageBody,
   OnMessage,
   SocketIO,
 } from "socket-controllers";
 import { Server, Socket } from "socket.io";
+import {
+  ChatIncomingMessage,
+  ChatInputProtocol,
+  ChatMessage,
+  ChatOutputProtocol,
+} from "src/enums/chat.protocol";
+import UserService from "src/services/user.service";
 import { AuthenticatedSocket } from "src/types/authenticated.socket";
-import { logger } from "src/utils/logger";
+import { Inject } from "typedi";
 
 @SocketController()
 export class ChatController {
-  @OnConnect()
-  connection(
+  constructor(@Inject() private userService: UserService) {}
+
+  @OnMessage(ChatInputProtocol.SEND_MESSAGE)
+  async sendMessage(
     @SocketIO() io: Server,
-    @ConnectedSocket() socket: AuthenticatedSocket
+    @ConnectedSocket() socket: AuthenticatedSocket,
+    @MessageBody() incomingMessage: ChatIncomingMessage
   ) {
-    const name = socket.decoded_token.name;
-  }
+    // fetch user, so we don't rely on JWT's user information
+    // for additional safety reasons.
+    const user = await this.userService.getUser(socket.decoded_token.id);
 
-  @OnDisconnect()
-  disconnect(@ConnectedSocket() socket: Socket) {
-    console.log("client disconnected");
-  }
+    const { message, room } = incomingMessage;
 
-  @OnMessage("join-channel")
-  joinChannel(@ConnectedSocket() socket: Socket, @MessageBody() message: any) {
-    socket.join(message.room);
-  }
+    const output: ChatMessage = {
+      from: user.name,
+      message: message,
+    };
 
-  @OnMessage("send-message")
-  sendMessage(
-    @SocketIO() io: Server,
-    @ConnectedSocket() socket: Socket,
-    @MessageBody() o: any
-  ) {
-    const name = socket["decoded_token"].name;
+    // Here we left some room for improvement, such as
+    // word filtering for e.g.
 
-    const { message, room } = o;
-    io.to(room).emit("message", {
-      from: name,
-      message,
-    });
+    io.to(room).emit(ChatOutputProtocol.SEND_MESSAGE, output);
   }
 }

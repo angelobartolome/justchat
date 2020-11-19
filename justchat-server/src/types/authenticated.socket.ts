@@ -1,9 +1,6 @@
 import { Socket } from "socket.io";
-
-type Usertoken = {
-  name: string;
-};
+import { UserToken } from "./user.token";
 
 export type AuthenticatedSocket = Socket & {
-  decoded_token: Usertoken;
+  decoded_token: UserToken;
 };

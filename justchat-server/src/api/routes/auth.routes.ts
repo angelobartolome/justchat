@@ -5,6 +5,7 @@ import Container from "typedi";
 import jwt from "jsonwebtoken";
 import config from "src/config";
 import { logger } from "src/utils/logger";
+import { UserToken } from "src/types/user.token";
 
 const router = Router();
 export default (app: Router) => {
@@ -20,7 +21,12 @@ export default (app: Router) => {
 
       if (valid) {
         const user = await userService.getUserByEmail(email);
-        const token = jwt.sign({ id: user.id, name: user.name }, config.secret);
+        const userToken: UserToken = {
+          id: user.id,
+          name: user.name,
+        };
+
+        const token = jwt.sign(userToken, config.secret);
         return res.status(200).json({ token });
       }
 
