@@ -3,6 +3,7 @@ import { ChatBotProtocol } from "src/enums/chat.protocol";
 import amqplib from "amqplib";
 import config from "src/config";
 import { IChatService, ChatListenCallback } from "src/interfaces/IChatService";
+import { logger } from "src/utils/logger";
 
 @Service()
 export default class ChatService implements IChatService {
@@ -13,7 +14,8 @@ export default class ChatService implements IChatService {
       ChatBotProtocol.BOT_REQUEST_QUEUE_ID,
       async (message) => {
         this.channel.ack(message);
-        var channel = "#default";
+        let channel = "#default";
+
         try {
           const {
             content,
@@ -28,9 +30,9 @@ export default class ChatService implements IChatService {
             from: headers["name"],
           });
         } catch (error) {
-          console.log(error);
+          logger.error(error);
           await this.sendMessage(
-            "Sorry, we were unable to complete your request",
+            "Sorry, i can't to complete your request 🤭",
             channel
           );
         }

@@ -5,15 +5,11 @@ import {
   OnMessage,
   SocketIO,
 } from "socket-controllers";
-import { Server, Socket } from "socket.io";
-import {
-  ChatIncomingMessage,
-  ChatInputProtocol,
-  ChatMessage,
-  ChatOutputProtocol,
-} from "src/enums/chat.protocol";
+import { Server } from "socket.io";
+import { ChatInputProtocol, ChatOutputProtocol } from "src/enums/chat.protocol";
 import UserService from "src/services/user.service";
 import { AuthenticatedSocket } from "src/types/authenticated.socket";
+import { ChatIncomingMessage, ChatMessage } from "src/types/chat.types";
 
 @SocketController()
 export class ChatController {

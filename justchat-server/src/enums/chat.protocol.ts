@@ -10,16 +10,6 @@ export enum ChatOutputProtocol {
   SEND_MESSAGE = "user_sent_message",
 }
 
-export type ChatIncomingMessage = {
-  message: string;
-  room: string;
-};
-
-export type ChatMessage = {
-  from: string;
-  message: string;
-};
-
 export enum ChatBotProtocol {
   BOT_REQUEST_QUEUE_ID = "bot_request_channel",
   BOT_RESPONSE_QUEUE_ID = "bot_response_channel",
