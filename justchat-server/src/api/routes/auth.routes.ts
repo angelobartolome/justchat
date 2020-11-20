@@ -3,6 +3,7 @@ import AuthService from "src/services/auth.service";
 import UserService from "src/services/user.service";
 import Container from "typedi";
 import { AuthController } from "../controllers/auth.controller";
+import { signUpValidator, signInValidator } from "./auth.routes.validation";
 
 const router = Router();
 export default (app: Router) => {
@@ -12,6 +13,10 @@ export default (app: Router) => {
   const userService = Container.get(UserService);
   const controller = new AuthController(authService, userService);
 
-  router.post("/signIn", (req, res) => controller.signIn(req, res));
-  router.post("/signUp", (req, res) => controller.signUp(req, res));
+  router.post("/signIn", signInValidator, (req, res) =>
+    controller.signIn(req, res)
+  );
+  router.post("/signUp", signUpValidator, (req, res) =>
+    controller.signUp(req, res)
+  );
 };

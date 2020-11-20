@@ -25,7 +25,6 @@ export class AuthController {
 
       return res.json({ token });
     } catch (e) {
-      logger.error(e.message);
       return res.status(401).json({ e });
     }
   }
@@ -41,7 +40,6 @@ export class AuthController {
 
       return res.json({ token });
     } catch (e) {
-      logger.error(e.message);
       return res.status(401).json({ e });
     }
   }

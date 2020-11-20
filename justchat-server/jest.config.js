@@ -8,5 +8,10 @@ module.exports = {
   // The test environment that will be used for testing
   testEnvironment: "node",
   // A preset that is used as a base for Jest's configuration
-  preset: 'ts-jest',
+  preset: "ts-jest",
+
+  // A map from regular expressions to module names that allow to stub out resources with a single module
+  moduleNameMapper: {
+    "src/(.*)": "<rootDir>/src/$1",
+  },
 };
