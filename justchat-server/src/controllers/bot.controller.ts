@@ -6,18 +6,18 @@ import {
 } from "socket-controllers";
 import { Server } from "socket.io";
 import { ChatInputProtocol, ChatOutputProtocol } from "src/enums/chat.protocol";
-import Container from "typedi";
+import Container, { Inject } from "typedi";
 import { AuthenticatedSocket } from "src/types/authenticated.socket";
-import UserService from "src/services/user.service";
 import { ChatIncomingMessage, ChatMessage } from "src/types/chat.types";
 import MessageBrokerService from "src/services/message.broker.service";
 import { logger } from "@typegoose/typegoose/lib/logSettings";
+import { IUserService } from "src/interfaces/user.service";
 
 @SocketController()
 export class BotController {
   constructor(
     private readonly mbService: MessageBrokerService,
-    private readonly userService: UserService
+    @Inject("userService") private readonly userService: IUserService
   ) {}
 
   setupConsumer() {

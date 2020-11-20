@@ -1,16 +1,16 @@
-import AuthService from "src/services/auth.service";
 import jwt from "jsonwebtoken";
 import config from "src/config";
-import { logger } from "src/utils/logger";
-import UserService from "src/services/user.service";
 import { Request, Response } from "express";
 import { AppError } from "src/common/app.error";
 import { UserDTO } from "src/models/user.model";
+import { Inject } from "typedi";
+import { IUserService } from "src/interfaces/user.service";
+import { IAuthService } from "src/interfaces/auth.service";
 
 export class AuthController {
   constructor(
-    private authService: AuthService,
-    private userService: UserService
+    @Inject("authService") private authService: IAuthService,
+    @Inject("userService") private userService: IUserService
   ) {}
 
   async signIn(req: Request, res: Response) {

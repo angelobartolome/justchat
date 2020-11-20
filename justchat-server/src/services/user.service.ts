@@ -4,7 +4,7 @@ import { IUserService } from "src/interfaces/user.service";
 import { User, UserDTO } from "src/models/user.model";
 import { Service, Inject } from "typedi";
 
-@Service()
+@Service("userService")
 export default class UserService
   extends ServiceBase<User>
   implements IUserService {

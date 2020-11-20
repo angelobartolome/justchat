@@ -8,7 +8,7 @@ import { User } from "src/models/user.model";
 import { ChatMessage } from "src/types/chat.types";
 import { Service, Inject } from "typedi";
 
-@Service()
+@Service("roomService")
 export default class RoomService
   extends ServiceBase<Room>
   implements IRoomService {

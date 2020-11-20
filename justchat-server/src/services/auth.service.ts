@@ -4,7 +4,7 @@ import { IAuthService } from "src/interfaces/auth.service";
 import { IUserService } from "src/interfaces/user.service";
 import { Inject, Service } from "typedi";
 
-@Service()
+@Service("authService")
 export default class AuthService implements IAuthService {
   constructor(@Inject("userService") private userService: IUserService) {}
 

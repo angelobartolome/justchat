@@ -6,15 +6,16 @@ import express from "express";
 import AuthService from "src/services/auth.service";
 import FakeAuthService from "src/test/mock.auth.service";
 import expressLoader from "src/loaders/express.loader";
-import { UserDTO } from "src/models/user.model";
+import { User, UserDTO } from "src/models/user.model";
 import { mockValidUser } from "src/test/mock-account";
+import jwt, { decode } from "jsonwebtoken";
 
 let app;
 let validUser: UserDTO;
 let invalidUser: UserDTO;
 let missingParametersUser: UserDTO;
 
-describe("Auth Routes", () => {
+describe("Auth Routes and Controller", () => {
   beforeAll(async () => {
     const fakeUserService = new FakeUserService();
     const fakeAuthService = new FakeAuthService(fakeUserService);
@@ -30,8 +31,17 @@ describe("Auth Routes", () => {
     missingParametersUser = { ...validUser, password: null };
   });
 
-  test("should return 200 on signup with good data", async () => {
-    await request(app).post("/auth/signUp").send(validUser).expect(200);
+  test("should return 200 with valid jwt on signup with good data", async () => {
+    await request(app)
+      .post("/auth/signUp")
+      .send(validUser)
+      .expect(200)
+      .then((response) => {
+        expect(response.body.token).not.toBeUndefined();
+
+        const decoded = jwt.decode(response.body.token) as User;
+        expect(decoded.name).toEqual(validUser.name);
+      });
   });
 
   test("should return 400 on signup with missing data", async () => {
@@ -45,7 +55,7 @@ describe("Auth Routes", () => {
     await request(app).post("/auth/signIn").send(invalidUser).expect(401);
   });
 
-  test("should return 200 on signin with known user", async () => {
+  test("should return 200 with valid jwt on signin with known user", async () => {
     await request(app)
       .post("/auth/signIn")
       .send({
@@ -55,6 +65,9 @@ describe("Auth Routes", () => {
       .expect(200)
       .then((response) => {
         expect(response.body.token).not.toBeUndefined();
+
+        const decoded = jwt.decode(response.body.token) as User;
+        expect(decoded.name).toEqual(validUser.name);
       });
   });
 });

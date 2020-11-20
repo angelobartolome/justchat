@@ -1,5 +1,8 @@
-import { Request, Response } from "express";
+export class AppError extends Error {
+  constructor(message) {
+    super(message);
 
-export class AppError {
-  constructor(error: string) {}
+    this.name = this.constructor.name;
+    Error.captureStackTrace(this, this.constructor);
+  }
 }
