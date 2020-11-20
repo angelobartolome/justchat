@@ -4,7 +4,7 @@ import http from "http";
 
 import config from "./config";
 import loaders from "./loaders";
-import { logger } from "./utils/logger";
+import LoggerInstance from "./utils/logger.instance";
 
 async function startServer() {
   const app = express();
@@ -13,7 +13,7 @@ async function startServer() {
   await loaders({ expressApp: app, httpServer });
 
   httpServer.listen(config.port, () => {
-    logger.info(`Your server is ready on port ${config.port}!`);
+    LoggerInstance.info(`Your server is ready on port ${config.port}!`);
   });
 }
 

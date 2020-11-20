@@ -1,6 +1,6 @@
 export class AppError extends Error {
-  constructor(message) {
-    super(message);
+  constructor(...params) {
+    super(...params);
 
     this.name = this.constructor.name;
     Error.captureStackTrace(this, this.constructor);

@@ -1,4 +1,3 @@
-import { logger } from "src/utils/logger";
 import http from "http";
 import defaultConfig from "src/config/socket.io";
 import { useContainer, useSocketServer } from "socket-controllers";
@@ -9,6 +8,7 @@ import { ChannelController } from "src/controllers/channel.controller";
 import { BotController } from "src/controllers/bot.controller";
 import { Container } from "typedi";
 import { Server } from "socket.io";
+import LoggerInstance from "src/utils/logger.instance";
 
 export default async (http: http.Server) => {
   const io: SocketIO.Server = require("socket.io")(http, defaultConfig);
@@ -32,5 +32,5 @@ export default async (http: http.Server) => {
   const botController = Container.get<BotController>(BotController);
   botController.setupConsumer();
 
-  logger.info("Socket.io Initialized");
+  LoggerInstance.info("Socket.io Initialized");
 };

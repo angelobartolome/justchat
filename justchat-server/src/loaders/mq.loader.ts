@@ -1,4 +1,4 @@
-import { logger } from "src/utils/logger";
+import LoggerInstance from "src/utils/logger.instance";
 import config from "src/config";
 import amqp from "amqplib";
 import { ChatBotProtocol } from "src/enums/chat.protocol";
@@ -12,6 +12,6 @@ export default async () => {
     durable: false,
   });
 
-  logger.info("Rabbit.MQ amqplib Initialized");
+  LoggerInstance.info("Rabbit.MQ amqplib Initialized");
   return channel;
 };

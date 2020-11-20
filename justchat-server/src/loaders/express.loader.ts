@@ -1,8 +1,8 @@
 import express from "express";
 import bodyParser from "body-parser";
 import cors from "cors";
-import { logger } from "src/utils/logger";
 import api from "src/api";
+import LoggerInstance from "src/utils/logger.instance";
 
 export default async (app: express.Application) => {
   app.enable("trust proxy");
@@ -13,7 +13,7 @@ export default async (app: express.Application) => {
   app.use(bodyParser.json());
   app.use(api());
 
-  logger.info("Express Initialized");
+  LoggerInstance.info("Express Initialized");
 
   return app;
 };

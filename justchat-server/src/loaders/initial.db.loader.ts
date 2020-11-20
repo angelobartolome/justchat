@@ -1,4 +1,4 @@
-import { logger } from "src/utils/logger";
+import LoggerInstance from "src/utils/logger.instance";
 import Container from "typedi";
 import RoomService from "src/services/room.service";
 import config from "src/config/room.config";
@@ -10,5 +10,5 @@ export default async () => {
     roomService.createRoom(room);
   }
 
-  logger.info("Migration Initialized");
+  LoggerInstance.info("Migration Initialized");
 };
