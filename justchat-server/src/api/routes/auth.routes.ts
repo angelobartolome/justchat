@@ -13,5 +13,5 @@ export default (app: Router) => {
   const controller = new AuthController(authService, userService);
 
   router.post("/signIn", (req, res) => controller.signIn(req, res));
-  router.post("/signUn", (req, res) => controller.signUp(req, res));
+  router.post("/signUp", (req, res) => controller.signUp(req, res));
 };
