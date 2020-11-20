@@ -21,12 +21,12 @@ export class AuthController {
       if (!valid) throw new AppError("Invalid credentials");
 
       const user = await this.userService.getUserByEmail(email);
-      const token = jwt.sign(user, config.secret);
+      const token = jwt.sign({ id: user.id, name: user.name }, config.secret);
 
       return res.json({ token });
     } catch (e) {
-      logger.error(e);
-      return res.status(401).json(e);
+      logger.error(e.message);
+      return res.status(401).json({ e });
     }
   }
 
@@ -37,12 +37,12 @@ export class AuthController {
 
       if (!user) throw new AppError("Invalid information");
 
-      const token = jwt.sign(user, config.secret);
+      const token = jwt.sign({ id: user.id, name: user.name }, config.secret);
 
       return res.json({ token });
     } catch (e) {
-      logger.error(e);
-      return res.status(401).json(e);
+      logger.error(e.message);
+      return res.status(401).json({ e });
     }
   }
 }
