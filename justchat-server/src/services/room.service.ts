@@ -1,5 +1,10 @@
 import { DocumentType, ReturnModelType } from "@typegoose/typegoose";
+import {
+  EventDispatcher,
+  EventDispatcherInterface,
+} from "src/common/event-dispatcher";
 import roomConfig from "src/config/room.config";
+import { RoomEvents } from "src/enums/room.events";
 import { ServiceBase } from "src/helpers/service.base";
 import { IRoomService } from "src/interfaces/room.service";
 import { ChatMessageDataMapper } from "src/mappers/chat-message.mapper";
@@ -12,7 +17,10 @@ import { Service, Inject } from "typedi";
 export default class RoomService
   extends ServiceBase<Room>
   implements IRoomService {
-  constructor(@Inject("roomModel") model: ReturnModelType<typeof Room>) {
+  constructor(
+    @Inject("roomModel") model: ReturnModelType<typeof Room>,
+    @EventDispatcher() private eventDispatcher: EventDispatcherInterface
+  ) {
     super(model);
   }
 
@@ -23,7 +31,10 @@ export default class RoomService
 
     const createdDocument = new this.model({ name });
 
-    createdDocument.save();
+    await createdDocument.save();
+
+    this.eventDispatcher.dispatch(RoomEvents.ROOM_CREATED, name);
+
     return createdDocument;
   }
 

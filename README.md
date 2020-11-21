@@ -2,11 +2,12 @@
 
 This is the Just Chat project, written in TypeScript, React, uses Socket.io, RabbitMQ, Mongoose/Typegoose.
 
-- allow users to register and log in
-- allow users to chat between themselves
-- let users know what was going on when they join the room (chat history)
-- features a **stocks** information bot
-- multiple channels to chat from
+- [x] allow users to register and log in
+- [x] allow users to chat between themselves in real-time communication
+- [x] let users know what was going on when they join the room (chat history)
+- [x] features a **stocks** information bot
+- [x] multiple channels to chat from
+- [x] easy to add new bots
 
 ## Requirements
 
@@ -41,4 +42,6 @@ Wait few seconds to have everything up (Rabbit.MQ and MongoDB takes up to 30sec)
 
 Now open two browser instances on [http://localhost](http://localhost), register with different names and e-mails, and try-it out!
 
-Available bot commands: - **/stock=aapl.us**: Show stocks value on _aapl.us_, try **googl.us** for e.g.
+Available bot commands:
+
+- **/stock=aapl.us**: Show stocks value on _aapl.us_, try **googl.us** for e.g.

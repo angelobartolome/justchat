@@ -42,6 +42,15 @@ export class BotController {
   ) {
     const { message } = incomingMessage;
 
+    // starts with /, it's a bot command
+    // could be improved using regex, but for
+    // this application, it's totally fine.
+    // If it's not a bot command, we have nothing
+    // else to do here.
+    if (!message.startsWith("/")) return;
+
+    // We fetch user info so we could use more data in the future
+    // for now, we could just use user's name from JWT
     const user = await this.userService.getUser(socket.decoded_token.id);
 
     // Don't throw error, as we can't handle outside of socket.
@@ -50,15 +59,11 @@ export class BotController {
       return;
     }
 
-    // starts with /, it's a bot command
-    // could be improved using regex, but for
-    // this application, it's totally fine.
-    if (message.startsWith("/")) {
-      this.mbService.sendMessage({
-        ...incomingMessage,
-        date: new Date(),
-        from: user.name,
-      });
-    }
+    // Put message on bot's queue
+    this.mbService.sendMessage({
+      ...incomingMessage,
+      date: new Date(),
+      from: user.name,
+    });
   }
 }
