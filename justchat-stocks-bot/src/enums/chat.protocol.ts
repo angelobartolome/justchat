@@ -3,4 +3,7 @@ export enum ChatBotProtocol {
   BOT_RESPONSE_QUEUE_ID = "bot_response_channel",
 }
 
-export const StockCommand = /^\/stock=/;
+export class ChatBotParserRegex {
+  static CommandRegex = /^\/stock=/;
+  static TicketParserRegex = /(?<=\/stock=)(\w|\.)*/;
+}
