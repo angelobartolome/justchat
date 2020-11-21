@@ -1,22 +1,20 @@
-import Container, { Inject, Service } from "typedi";
+import { Inject, Service } from "typedi";
 import { ChatBotMessage } from "src/types/chat.types";
 import { CommandParser } from "src/common/command.parser";
 import messages from "src/common/messages";
 import { IChatService } from "src/interfaces/IChatService";
 import { IStockService } from "src/interfaces/IStockService";
-import ChatService from "src/services/chat.service";
 
 @Service()
 export class BotController {
   constructor(
-    @Inject("chatService") private readonly chatService: IChatService,
-    @Inject("stockService") private readonly stockService: IStockService,
-    @Inject("botCommandParser") private readonly commandParser: CommandParser
+    @Inject("chatService") private chatService: IChatService,
+    @Inject("stockService") private stockService: IStockService,
+    @Inject("botCommandParser") private commandParser: CommandParser
   ) {}
 
   init() {
-    const chatService = Container.get(ChatService);
-    chatService.listenToMessages((message) => this.parseMessage(message));
+    this.chatService.listenToMessages((message) => this.parseMessage(message));
   }
 
   async parseMessage(message: ChatBotMessage) {
