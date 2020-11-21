@@ -4,7 +4,7 @@ import auth from "./routes/auth.routes";
 export default () => {
   const app = Router();
 
-  auth(app);
+  app.use("/auth", auth());
 
   return app;
 };
