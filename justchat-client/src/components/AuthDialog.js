@@ -39,7 +39,7 @@ function SignIn({ onAuthenticated }) {
       redirect: "follow",
     };
 
-    fetch("http://localhost:3000/auth/signIn", requestOptions)
+    fetch("http://localhost:3000/auth/sign-in", requestOptions)
       .then((c) => c.json())
       .then((c) => {
         if (c.token) {
@@ -122,7 +122,7 @@ function SignUp({ onAuthenticated }) {
       redirect: "follow",
     };
 
-    fetch("http://localhost:3000/auth/signUp", requestOptions)
+    fetch("http://localhost:3000/auth/sign-up", requestOptions)
       .then((c) => c.json())
       .then((c) => {
         if (c.token) {
