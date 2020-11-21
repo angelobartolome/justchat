@@ -4,8 +4,9 @@ import amqplib from "amqplib";
 import config from "src/config";
 import { IChatService, ChatListenCallback } from "src/interfaces/IChatService";
 import { logger } from "src/utils/logger";
+import messages from "src/common/messages";
 
-@Service()
+@Service("chatService")
 export default class ChatService implements IChatService {
   constructor(@Inject("channel") private readonly channel: amqplib.Channel) {}
 
@@ -31,10 +32,7 @@ export default class ChatService implements IChatService {
           });
         } catch (error) {
           logger.error(error);
-          await this.sendMessage(
-            "Sorry, i can't to complete your request 🤭",
-            room
-          );
+          await this.sendMessage(messages.genericError(), room);
         }
       }
     );

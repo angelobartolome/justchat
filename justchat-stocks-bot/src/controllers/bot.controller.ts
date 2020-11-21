@@ -1,15 +1,15 @@
 import { Inject, Service } from "typedi";
-import StockService from "src/services/stock.service";
-import ChatService from "src/services/chat.service";
 import { ChatBotMessage } from "src/types/chat.types";
 import { CommandParser } from "src/common/command.parser";
 import messages from "src/common/messages";
+import { IChatService } from "src/interfaces/IChatService";
+import { IStockService } from "src/interfaces/IStockService";
 
 @Service()
 export class BotController {
   constructor(
-    private readonly chatService: ChatService,
-    private readonly stockService: StockService,
+    @Inject("chatService") private readonly chatService: IChatService,
+    @Inject("stockService") private readonly stockService: IStockService,
     @Inject("botCommandParser") private readonly commandParser: CommandParser
   ) {}
 

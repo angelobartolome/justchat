@@ -1,5 +1,4 @@
 import StockService from "./stock.service";
-import fetch from "node-fetch";
 
 jest.mock("node-fetch", () => {
   return jest.fn(

@@ -5,7 +5,7 @@ import config from "src/config";
 import parse from "csv-parse/lib/sync";
 import { logger } from "src/utils/logger";
 
-@Service()
+@Service("stockService")
 export default class StockService implements IStockService {
   async getData(ticker: string): Promise<number | null> {
     try {
