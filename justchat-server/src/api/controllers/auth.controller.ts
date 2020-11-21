@@ -40,6 +40,7 @@ export class AuthController {
 
       return res.json({ token });
     } catch (e) {
+      console.log(e, JSON.stringify(e));
       return res.status(401).json({ e });
     }
   }

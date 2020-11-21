@@ -3,8 +3,8 @@ import FakeUserService from "src/test/mock.user.service";
 import request from "supertest";
 import { Container } from "typedi";
 import express from "express";
-import AuthService from "src/services/auth.service";
 import FakeAuthService from "src/test/mock.auth.service";
+import { AuthController } from "src/api/controllers/auth.controller";
 import expressLoader from "src/loaders/express.loader";
 import { User, UserDTO } from "src/models/user.model";
 import { mockValidUser } from "src/test/mock-account";
@@ -20,8 +20,10 @@ describe("Auth Routes and Controller", () => {
     const fakeUserService = new FakeUserService();
     const fakeAuthService = new FakeAuthService(fakeUserService);
 
-    Container.set(UserService, fakeUserService);
-    Container.set(AuthService, fakeAuthService);
+    Container.set(
+      AuthController,
+      new AuthController(fakeAuthService, fakeUserService)
+    );
 
     app = express();
     await expressLoader(app);
@@ -31,9 +33,9 @@ describe("Auth Routes and Controller", () => {
     missingParametersUser = { ...validUser, password: null };
   });
 
-  test("should return 200 with valid jwt on signup with good data", async () => {
+  test("should return 200 with valid jwt on sign-up with good data", async () => {
     await request(app)
-      .post("/auth/signUp")
+      .post("/auth/sign-up")
       .send(validUser)
       .expect(200)
       .then((response) => {
@@ -44,20 +46,20 @@ describe("Auth Routes and Controller", () => {
       });
   });
 
-  test("should return 400 on signup with missing data", async () => {
+  test("should return 400 on sign-up with missing data", async () => {
     await request(app)
-      .post("/auth/signUp")
+      .post("/auth/sign-up")
       .send(missingParametersUser)
       .expect(400);
   });
 
-  test("should return 401 on signin with unknown user", async () => {
-    await request(app).post("/auth/signIn").send(invalidUser).expect(401);
+  test("should return 401 on sign-in with unknown user", async () => {
+    await request(app).post("/auth/sign-in").send(invalidUser).expect(401);
   });
 
-  test("should return 200 with valid jwt on signin with known user", async () => {
+  test("should return 200 with valid jwt on sign-in with known user", async () => {
     await request(app)
-      .post("/auth/signIn")
+      .post("/auth/sign-in")
       .send({
         email: validUser.email,
         password: validUser.password,

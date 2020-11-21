@@ -6,5 +6,5 @@ export default {
   invalidCommand: () =>
     "Sorry, invalid command, try for example: /stock=googl.us",
   invalidStock: () => "Sorry, invalid stock, try for example: googl.us",
-  genericError: () => "Sorry, i can't to complete your request 🤭",
+  genericError: () => "Sorry, i can't handle your request 🤭",
 };

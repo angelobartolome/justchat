@@ -7,10 +7,10 @@ const router = Router();
 export default () => {
   const controller = Container.get(AuthController);
 
-  router.post("/signIn", signInValidator, (req, res) =>
+  router.post("/sign-in", signInValidator, (req, res) =>
     controller.signIn(req, res)
   );
-  router.post("/signUp", signUpValidator, (req, res) =>
+  router.post("/sign-up", signUpValidator, (req, res) =>
     controller.signUp(req, res)
   );
 

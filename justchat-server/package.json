@@ -55,6 +55,7 @@
     "body-parser": "^1.19.0",
     "cors": "^2.8.5",
     "dotenv": "^8.2.0",
+    "env-var": "^7.0.0",
     "express": "^4.17.1",
     "express-yup-middleware": "^1.1.2",
     "faker": "^5.1.0",

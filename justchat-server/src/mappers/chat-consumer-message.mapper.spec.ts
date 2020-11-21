@@ -1,6 +1,6 @@
 import { ConsumeMessage } from "amqplib";
 import { ChatMessage } from "src/types/chat.types";
-import { ChatConsumerMessageDataMapper } from "./chat.consumer.message.mapper";
+import { ChatConsumerMessageDataMapper } from "./chat-consumer-message.mapper";
 
 const mockChatMessage = (): ChatMessage => {
   return {

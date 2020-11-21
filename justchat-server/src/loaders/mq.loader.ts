@@ -3,7 +3,7 @@ import config from "src/config";
 import amqp from "amqplib";
 import { ChatBotProtocol } from "src/enums/chat.protocol";
 export default async () => {
-  const conn = await amqp.connect(config.brokerUri);
+  const conn = await amqp.connect(config.brokerURI);
   const channel = await conn.createChannel();
 
   // Create default comm channels

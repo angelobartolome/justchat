@@ -26,8 +26,6 @@ export class ChatController {
     @ConnectedSocket() socket: AuthenticatedSocket,
     @MessageBody() incomingMessage: ChatIncomingMessage
   ) {
-    // fetch user, so we don't rely on JWT's user information
-    // for additional safety reasons.
     const user = await this.userService.getUser(socket.decoded_token.id);
     const { message, room } = incomingMessage;
 
@@ -37,7 +35,7 @@ export class ChatController {
       from: user.name,
     };
 
-    // There's room for improvement here
+    // Do not save commands on database
     if (!message.startsWith("/"))
       await this.roomService.saveMessage(user, room, message);
 

@@ -6,7 +6,7 @@ import { Inject, Service } from "typedi";
 import amqplib from "amqplib";
 import { ChatBotProtocol } from "src/enums/chat.protocol";
 import { ChatMessage } from "src/types/chat.types";
-import { ChatConsumerMessageDataMapper } from "src/mappers/chat.consumer.message.mapper";
+import { ChatConsumerMessageDataMapper } from "src/mappers/chat-consumer-message.mapper";
 
 @Service()
 export default class MessageBrokerService implements IMessageBrokerService {

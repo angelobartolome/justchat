@@ -1,11 +1,11 @@
 import http from "http";
 import defaultConfig from "src/config/socket.io";
 import { useContainer, useSocketServer } from "socket-controllers";
-import { ChatController } from "src/controllers/chat.controller";
+import { ChatController } from "src/socket-controllers/chat.controller";
 import socketIoJwt from "socketio-jwt";
 import config from "src/config";
-import { ChannelController } from "src/controllers/channel.controller";
-import { BotController } from "src/controllers/bot.controller";
+import { ChannelController } from "src/socket-controllers/channel.controller";
+import { BotController } from "src/socket-controllers/bot.controller";
 import { Container } from "typedi";
 import { Server } from "socket.io";
 import LoggerInstance from "src/utils/logger.instance";

@@ -2,7 +2,7 @@ import { DocumentType, ReturnModelType } from "@typegoose/typegoose";
 import roomConfig from "src/config/room.config";
 import { ServiceBase } from "src/helpers/service.base";
 import { IRoomService } from "src/interfaces/room.service";
-import { ChatMessageDataMapper } from "src/mappers/chat.message.mapper";
+import { ChatMessageDataMapper } from "src/mappers/chat-message.mapper";
 import { Room } from "src/models/room.model";
 import { User } from "src/models/user.model";
 import { ChatMessage } from "src/types/chat.types";

@@ -9,7 +9,7 @@ import { ChatInputProtocol, ChatOutputProtocol } from "src/enums/chat.protocol";
 import Container, { Inject } from "typedi";
 import { AuthenticatedSocket } from "src/types/authenticated.socket";
 import { ChatIncomingMessage, ChatMessage } from "src/types/chat.types";
-import MessageBrokerService from "src/services/message.broker.service";
+import MessageBrokerService from "src/services/message-broker.service";
 import { logger } from "@typegoose/typegoose/lib/logSettings";
 import { IUserService } from "src/interfaces/user.service";
 
