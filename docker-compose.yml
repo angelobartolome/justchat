@@ -16,6 +16,7 @@ services:
     environment:
       - BROKER_URI=amqp://rabbitmq:5672
       - DATABASE_URI=mongodb://db:27017/db
+      - SECRET=zVihFxmg1d2HXwxL7O579PnuR6P7ZkaC
     networks:
       - app-network
     command: ./wait-for.sh rabbitmq:5672 -- npm start
@@ -31,6 +32,7 @@ services:
     restart: on-failure
     environment:
       - BROKER_URI=amqp://rabbitmq:5672
+      - STOCK_URL=https://stooq.com/q/l/?f=sd2t2ohlcv&h&e=csv&s=
     networks:
       - app-network
     command: ./wait-for.sh rabbitmq:5672 -- npm start
