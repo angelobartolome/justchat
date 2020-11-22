@@ -29,6 +29,7 @@ git clone https://github.com/angelobartolome/justchat
 Step 2: Build the Docker instance
 
 ```bash
+cd justchat
 docker-compose build
 ```
 
