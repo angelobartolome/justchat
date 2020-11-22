@@ -46,3 +46,13 @@ Now open two browser instances on [http://localhost](http://localhost), register
 Available bot commands:
 
 - **/stock=aapl.us**: Show stocks value on _aapl.us_, try **googl.us** for e.g.
+
+## Create new rooms
+
+To create a new room, just send a POST request to http://localhost:3000/room/create (if you are running on Docker) with following body:
+
+```json
+{
+  "name": "#room_name_here"
+}
+```
