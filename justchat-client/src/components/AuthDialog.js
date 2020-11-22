@@ -40,7 +40,10 @@ function SignIn({ onAuthenticated }) {
     };
 
     fetch("http://localhost:3000/auth/sign-in", requestOptions)
-      .then((c) => c.json())
+      .then((response) => {
+        if (!response.ok) throw new Error();
+        return response.json();
+      })
       .then((c) => {
         if (c.token) {
           onAuthenticated(c.token);
@@ -123,7 +126,10 @@ function SignUp({ onAuthenticated }) {
     };
 
     fetch("http://localhost:3000/auth/sign-up", requestOptions)
-      .then((c) => c.json())
+      .then((response) => {
+        if (!response.ok) throw new Error();
+        return response.json();
+      })
       .then((c) => {
         if (c.token) {
           onAuthenticated(c.token);
